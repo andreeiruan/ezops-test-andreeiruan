@@ -1,0 +1,24 @@
+{
+  "name": "demo-chat-app",
+  "version": "1.0.0",
+  "description": "demo chat app",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine",
+    "dev": "nodemon ./server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.16.3",
+    "mongoose": "^6.0.4",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "jasmine": "^3.1.0",
+    "nodemon": "^2.0.12",
+    "request": "^2.87.0"
+  }
+}
