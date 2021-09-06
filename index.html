@@ -41,13 +41,13 @@
     }
 
     function getMessages(){
-      $.get('http://172.31.23.39:3000/messages', (data) => {
+      $.get('http://0.0.0.0:3000/messages', (data) => {
         data.forEach(addMessages);
       })
     }
 
     function sendMessage(message){
-      $.post('http://172.31.23.39:3000/messages', message)
+      $.post('http://0.0.0.0:3000/messages', message)
     }
 </script>
 </body>
