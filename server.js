@@ -35,14 +35,25 @@ app.post('/messages', async (req, res) => {
   try {    
     const savedMessage = await Message.create({ name: req.body.name, message: req.body.message });
     const hellos = ['ola', 'olá', 'oi', 'oii', 'oiii']
+    const goodMornigs = ['bom dia', 'boom dia']
+    const goodAfternoos = ['boa tarde', 'booa tardee']
 
     io.emit('message', req.body);
     
-
     if(hellos.includes(req.body.message.toLowerCase())){
-      const botMessage = await Message.create({ name: 'Bot', message: `Olá ${req.body.name}`});      
+      const botMessage = await Message.create({ name: 'Bot', message: `Olá,${req.body.name}`});      
       io.emit('message', { name: botMessage.name, message: botMessage.message})
     }    
+
+    if(goodMornigs.includes(req.body.message.toLowerCase())){
+      const botMessage = await Message.create({ name: 'Bot', message: `Bom dia, ${req.body.name}`});      
+      io.emit('message', { name: botMessage.name, message: botMessage.message})
+    }  
+
+    if(goodAfternoos.includes(req.body.message.toLowerCase())){
+      const botMessage = await Message.create({ name: 'Bot', message: `Boa tarde, ${req.body.name}`});      
+      io.emit('message', { name: botMessage.name, message: botMessage.message})
+    }  
     
     return res.status(200).json(savedMessage);
   } catch (error) {
