@@ -5,7 +5,7 @@
   "main": "index.js",
   "husky": {
     "hooks": {
-      "pre-push": "eval $(docker-machine env ezops-test-andreeiruan) && docker stop boring_maxwell && docker image rmi simple-chat ---force && docker build -t simple-chat . && docker run -p 3000:3000 -d simple-chat -name simple-chat-container "
+      "pre-push": "eval $(docker-machine env ezops-test-andreeiruan) && docker kill $(docker ps -q) && docker image rmi simple-chat --force && docker build -t simple-chat . && docker run -p 3000:3000 -d simple-chat"
     }
   },
   "scripts": {
