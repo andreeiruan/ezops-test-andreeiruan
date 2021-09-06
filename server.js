@@ -32,16 +32,18 @@ app.get('/messages/:user', async (req, res) => {
 });
 
 app.post('/messages', async (req, res) => {
-  try {
-    console.log(req.body);
+  try {    
     const savedMessage = await Message.create({ name: req.body.name, message: req.body.message });
+    const hellos = ['ola', 'olá', 'oi', 'oii', 'oiii']
 
-    const censored = await Message.findOne({ message: 'badword' });
-    if (censored) {
-      await Message.remove({ _id: censored.id });
-    } else {
-      io.emit('message', req.body);
-    }
+    io.emit('message', req.body);
+    
+
+    if(hellos.includes(req.body.message.toLowerCase())){
+      const botMessage = await Message.create({ name: 'Bot', message: `Olá ${req.body.name}`});      
+      io.emit('message', { name: botMessage.name, message: botMessage.message})
+    }    
+    
     return res.status(200).json(savedMessage);
   } catch (error) {
     console.log('error', error);
