@@ -5,10 +5,12 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bodyParser = require('body-parser')
 
 app.use(cors());
 app.use(express.static(__dirname));
-app.use(express.json());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}))
 
 const Message = mongoose.model('Message', {
   name: String,
@@ -31,7 +33,7 @@ app.get('/messages/:user', async (req, res) => {
 
 app.post('/messages', async (req, res) => {
   try {
-    console.log(req);
+    console.log(req.body);
     const savedMessage = await Message.create({ name: req.body.name, message: req.body.message });
 
     const censored = await Message.findOne({ message: 'badword' });
