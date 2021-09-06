@@ -19,7 +19,7 @@ var dbUrl = 'mongodb+srv://sleeppetz:sleeppetz@cluster0.edsrj.mongodb.net/simple
 
 app.get('/messages', (req, res) => {
   Message.find({},(err, messages)=> {
-    res.send(messages);
+    res.json(messages);
   })
 })
 
@@ -27,7 +27,7 @@ app.get('/messages', (req, res) => {
 app.get('/messages/:user', (req, res) => {
   var user = req.params.user
   Message.find({name: user},(err, messages)=> {
-    res.send(messages);
+    res.json(messages);
   })
 })
 
