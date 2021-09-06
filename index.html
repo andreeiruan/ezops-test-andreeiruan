@@ -18,7 +18,7 @@
         <br>
         <textarea id = "message" class="form-control" placeholder="Your Message Here"></textarea>
         <br>
-        <button id="send" class="btn btn-success">Send</button>
+        <button id="send" class="btn btn-success" type="button">Send</button>
     </div>
     <div id="messages">
 
@@ -41,13 +41,14 @@
     }
 
     function getMessages(){
-      $.get('http://172.31.23.39:3000/messages', (data) => {
+      $.get('http://localhost:3000/messages', (data) => {
         data.forEach(addMessages);
       })
     }
 
     function sendMessage(message){
-      $.post('http://172.31.23.39:3000/messages', message)
+      console.log(message)
+      $.post('http://localhost:3000/messages', { ...message })
     }
 </script>
 </body>

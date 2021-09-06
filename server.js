@@ -1,73 +1,60 @@
-var express = require('express');
-var bodyParser = require('body-parser')
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var mongoose = require('mongoose');
-var cors = require('cors')
+const express = require('express');
 
-app.use(cors())
+const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+app.use(cors());
 app.use(express.static(__dirname));
-app.use(express.json())
+app.use(express.json());
 
-var Message = mongoose.model('Message',{
-  name : String,
-  message : String
-})
+const Message = mongoose.model('Message', {
+  name: String,
+  message: String
+});
 
-var dbUrl = 'mongodb+srv://sleeppetz:sleeppetz@cluster0.edsrj.mongodb.net/simple-chat?retryWrites=true&w=majority'
+const dbUrl = 'mongodb+srv://sleeppetz:sleeppetz@cluster0.edsrj.mongodb.net/simple-chat?retryWrites=true&w=majority';
 
-app.get('/messages', (req, res) => {
-  Message.find({},(err, messages)=> {
-    console.log('Teste')
-    res.json(messages);
-  })
-})
+app.get('/messages', async (req, res) => {
+  const messages = await Message.find();
 
+  return res.json(messages);
+});
 
-app.get('/messages/:user', (req, res) => {
-  console.log('Teste')
-  var user = req.params.user
-  Message.find({name: user},(err, messages)=> {
-    res.json(messages);
-  })
-})
-
+app.get('/messages/:user', async (req, res) => {
+  const { user } = req.params;
+  const messages = await Message.find({ user });
+  return res.json(messages);
+});
 
 app.post('/messages', async (req, res) => {
-  try{
-    var message = new Message(req.body);
+  try {
+    console.log(req);
+    const savedMessage = await Message.create({ name: req.body.name, message: req.body.message });
 
-    var savedMessage = await message.save()
-      console.log('saved');
-
-    var censored = await Message.findOne({message:'badword'});
-      if(censored)
-        await Message.remove({_id: censored.id})
-      else
-        io.emit('message', req.body);
-      res.sendStatus(200);
+    const censored = await Message.findOne({ message: 'badword' });
+    if (censored) {
+      await Message.remove({ _id: censored.id });
+    } else {
+      io.emit('message', req.body);
+    }
+    return res.status(200).json(savedMessage);
+  } catch (error) {
+    console.log('error', error);
+    return res.status(500).json();
   }
-  catch (error){
-    res.sendStatus(500);
-    return console.log('error',error);
-  }
-  finally{
-    console.log('Message Posted')
-  }
+});
 
-})
+io.on('connection', () => {
+  console.log('a user is connected');
+});
 
+mongoose.connect(dbUrl, {}, (err) => {
+  console.log('mongodb connected', err);
+});
 
-
-io.on('connection', () =>{
-  console.log('a user is connected')
-})
-
-mongoose.connect(dbUrl ,{} ,(err) => {
-  console.log('mongodb connected',err);
-})
-
-var server = http.listen(3000, () => {
+const server = http.listen(3000, () => {
   console.log('server is running on port', server.address().port);
 });
