@@ -41,7 +41,7 @@ app.post('/messages', async (req, res) => {
     io.emit('message', req.body);
     
     if(hellos.includes(req.body.message.toLowerCase())){
-      const botMessage = await Message.create({ name: 'Bot', message: `Olá,${req.body.name}`});      
+      const botMessage = await Message.create({ name: 'Bot', message: `Olá, ${req.body.name}`});      
       io.emit('message', { name: botMessage.name, message: botMessage.message})
     }    
 
