@@ -1,6 +1,0 @@
-version: 0.2
-
-phases:
-  install:
-    commands:
-      - aws ssm send-command --document-name "AWS-RunPowerShellScript" --instance-ids "i-0a26a4392c9e5e913" --parameters commands=ls      
